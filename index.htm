@@ -175,8 +175,8 @@
                 } else if (isPhone) {
                     html += `<input type="tel" name="extra_field" data-label="${field.label}" data-phone="true" required
                         value="+998 "
-                        placeholder="+998 XXX XX XX"
-                        maxlength="16"
+                        placeholder="+998 XX XXX XX XX"
+                        maxlength="17"
                         class="w-full px-4 py-2.5 bg-slate-50 dark:bg-slate-800/85 border border-slate-300 dark:border-slate-700 rounded-xl text-sm text-slate-900 dark:text-white outline-none focus:ring-2 focus:ring-blue-500">`;
                 } else {
                     html += `<input type="${field.type === 'number' ? 'number' : 'text'}" name="extra_field" data-label="${field.label}" required placeholder="${field.placeholder || field.label + 'ni kiriting'}" class="w-full px-4 py-2.5 bg-slate-50 dark:bg-slate-800/85 border border-slate-300 dark:border-slate-700 rounded-xl text-sm text-slate-900 dark:text-white outline-none focus:ring-2 focus:ring-blue-500">`;
@@ -189,12 +189,13 @@
         });
 
         function formatPhoneValue(digits) {
-            // faqat 7 ta raqam: XXX XX XX
-            const d = digits.slice(0, 7);
+            // 9 ta raqam: XX XXX XX XX (operator kodi + abonent raqami)
+            const d = digits.slice(0, 9);
             let out = '';
-            if (d.length > 0) out += d.slice(0, 3);
-            if (d.length > 3) out += ' ' + d.slice(3, 5);
+            if (d.length > 0) out += d.slice(0, 2);
+            if (d.length > 2) out += ' ' + d.slice(2, 5);
             if (d.length > 5) out += ' ' + d.slice(5, 7);
+            if (d.length > 7) out += ' ' + d.slice(7, 9);
             return out;
         }
 
@@ -220,7 +221,7 @@
                     let raw = input.value.replace(/\D/g, '');
                     // 998 prefiksini olib tashlash
                     if (raw.startsWith('998')) raw = raw.slice(3);
-                    raw = raw.slice(0, 7);
+                    raw = raw.slice(0, 9);
                     input.value = '+998 ' + formatPhoneValue(raw);
                     // Kursorni oxiriga
                     const len = input.value.length;
@@ -232,7 +233,7 @@
                     e.preventDefault();
                     const pasted = (e.clipboardData || window.clipboardData).getData('text').replace(/\D/g, '');
                     let raw = pasted.startsWith('998') ? pasted.slice(3) : pasted;
-                    raw = raw.slice(0, 7);
+                    raw = raw.slice(0, 9);
                     input.value = '+998 ' + formatPhoneValue(raw);
                 });
             });
